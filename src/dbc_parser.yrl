@@ -1,33 +1,55 @@
-Nonterminals expr elem.
-Terminals '[' ']' ')' '(' '.' '|' '?' ':' int identifier string iterator optional operator composition function.
-Rootsymbol expr.
+Nonterminals
+    expr exprs
+    keyword
+    ident_or_keyword
+    version_section
+    symbols_section
+    identifier_list delimiters assignment.
+
+Terminals
+    version new_symbols bit_timing nodes message signal
+    comment attribute_definition attribute value_definition
+    identifier integer float string
+    colon semicolon pipe at lbracket rbracket
+    lparen rparen lbrace rbrace comma plus minus delimiter.
 
 
 
-expr -> expr composition expr   : {compose, '$1', '$3'}.
-expr -> '.' operator elem       : extract_operator('$2', '.', '$3').
-expr -> expr operator elem      : extract_operator('$2', '$1', '$3').
-expr -> function '(' expr ')'   : extract_function('$1', '$3').
+Rootsymbol exprs.
+Endsymbol '$end'.
 
-expr -> '.'                     : {pick, nil, nil}.
-expr -> '.' elem                : {pick, '$2', nil}.
-expr -> '.' elem expr           : {pick, '$2', '$3'}.
-expr -> expr '[' elem ']'       : {pick, '$3', '$1'}.
-expr -> expr '[' elem ']' expr  : {compose, {pick, '$3', '$1'}, '$5'}.
+expr -> version_section : '$1'.
+expr -> symbols_section : '$1'.
 
-elem -> elem '?'                : {optional, '$1'}.
-elem -> int ':' int             : {slice, extract_integer('$1'), extract_integer('$3')}.
+exprs -> expr : ['$1'].
+exprs -> expr delimiters : ['$1'].
+exprs -> expr exprs : ['$1' | '$2'].
 
-elem -> iterator                : iterator.
-elem -> int                     : extract_integer('$1').
-elem -> identifier              : extract_token('$1').
-elem -> string                  : extract_token('$1').
+delimiters -> delimiter.
+delimiters -> delimiter delimiters.
 
+keyword -> version : '$1'.
+keyword -> new_symbols : '$1'.
+keyword -> bit_timing : '$1'.
+keyword -> nodes : '$1'.
+keyword -> message : '$1'.
+keyword -> signal : '$1'.
+keyword -> comment : '$1'.
+keyword -> attribute_definition : '$1'.
+keyword -> attribute : '$1'.
+keyword -> value_definition : '$1'.
+
+assignment -> colon.
+assignment -> colon delimiters.
+
+ident_or_keyword -> keyword : '$1'.
+ident_or_keyword -> identifier : '$1'.
+
+identifier_list -> ident_or_keyword delimiter : ['$1'].
+identifier_list -> ident_or_keyword delimiter identifier_list : ['$1'|'$3'].
+
+version_section -> version string delimiters : {version, '$2'}.
+
+symbols_section -> new_symbols assignment identifier_list : {'$1', '$3'}.
 
 Erlang code.
-
-extract_token({_Token, _Line, Value}) -> Value.
-extract_operator({_Token, _Line, Op}, Lhs, Rhs) -> {operator, Op, Lhs, Rhs}.
-extract_function({_Token, _Line, Fun}, Expr) -> {function, Fun, Expr}.
-
-extract_integer({_Token, _Line, Value}) -> list_to_integer(Value).

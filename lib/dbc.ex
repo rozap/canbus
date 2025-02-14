@@ -27,11 +27,13 @@ defmodule Canbus.Dbc do
 
   def parse(content) do
     with {:ok, tokens} <- lex(content) do
-      case :dbc_parser.parse(tokens) do
+      IO.inspect tokens
+      case :dbc_parser.parse(tokens) |> IO.inspect do
         {:ok, _} = ok ->
           ok
 
         {:error, {_, :dbc_parser, [~c"syntax error before: ", before]}} ->
+
           {:error, %SyntaxError{before: :erlang.list_to_binary(before)}}
       end
     end
