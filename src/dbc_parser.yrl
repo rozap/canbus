@@ -78,12 +78,22 @@ bit_timing_section -> bit_timing assignment : {bit_timing, nil}.
 nodes_section -> nodes assignment : {nodes, nil}.
 nodes_section -> nodes assignment integer : {nodes, '$2'}.
 
+
+comment_section -> comment message integer string :
+  {comment, #{
+    id => strip_meta('$3'),
+    identifier => nil,
+    value => strip_meta('$4')
+  }}.
+
 comment_section -> comment signal integer identifier string :
   {comment, #{
     id => strip_meta('$3'),
     identifier => strip_meta('$4'),
     value => strip_meta('$5')
   }}.
+
+
 
 message_section -> message integer identifier colon integer identifier delimiters signal_list :
     {message, #{

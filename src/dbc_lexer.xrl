@@ -3,7 +3,7 @@ Definitions.
 WHITESPACE  = [\s\t]
 NEWLINE     = [\n\r]
 IDENTIFIER  = [a-zA-Z_][a-zA-Z0-9_]*
-INTEGER     = [0-9]+
+INTEGER     = -?[0-9]+
 FLOAT       = [0-9]+\.[0-9]+
 STRING      = \"[^\"]*\"
 COLON       = :

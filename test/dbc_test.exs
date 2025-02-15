@@ -58,4 +58,8 @@ defmodule DbcTest do
              {"WarningCounter", "Total warnings since ECU start time"}
            ]
   end
+
+  test "can parse the thing" do
+    assert {:ok, _} = dbc("fome") |> D.parse()
+  end
 end

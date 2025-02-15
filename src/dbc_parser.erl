@@ -2,7 +2,7 @@
 -module(dbc_parser).
 -file("src/dbc_parser.erl", 3).
 -export([parse/1, parse_and_scan/1, format_error/1]).
--file("src/dbc_parser.yrl", 151).
+-file("src/dbc_parser.yrl", 161).
 
 strip_meta({identifier, _LineNo, V}) ->
   V;
@@ -413,14 +413,20 @@ yeccpars2(98=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_98(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(99=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_99(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(100=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_100(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(100=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_100(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(101=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_101(S, Cat, Ss, Stack, T, Ts, Tzr);
-%% yeccpars2(102=S, Cat, Ss, Stack, T, Ts, Tzr) ->
-%%  yeccpars2_102(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(102=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_102(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(103=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_103(S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccpars2(104=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_104(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(105=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_105(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(106=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_106(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(Other, _, _, _, _, _, _) ->
  erlang:error({yecc_bug,"1.4",{missing_state_in_action_table, Other}}).
 
@@ -501,8 +507,10 @@ yeccpars2_9(_, _, _, _, T, _, _) ->
 
 -dialyzer({nowarn_function, yeccpars2_10/7}).
 -compile({nowarn_unused_function,  yeccpars2_10/7}).
-yeccpars2_10(S, 'signal', Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_10(S, 'message', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 96, Ss, Stack, T, Ts, Tzr);
+yeccpars2_10(S, 'signal', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 97, Ss, Stack, T, Ts, Tzr);
 yeccpars2_10(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
@@ -1098,77 +1106,98 @@ yeccpars2_95(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 -dialyzer({nowarn_function, yeccpars2_96/7}).
 -compile({nowarn_unused_function,  yeccpars2_96/7}).
 yeccpars2_96(S, 'integer', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 97, Ss, Stack, T, Ts, Tzr);
+ yeccpars1(S, 101, Ss, Stack, T, Ts, Tzr);
 yeccpars2_96(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_97/7}).
 -compile({nowarn_unused_function,  yeccpars2_97/7}).
-yeccpars2_97(S, 'identifier', Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_97(S, 'integer', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 98, Ss, Stack, T, Ts, Tzr);
 yeccpars2_97(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_98/7}).
 -compile({nowarn_unused_function,  yeccpars2_98/7}).
-yeccpars2_98(S, 'string', Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_98(S, 'identifier', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 99, Ss, Stack, T, Ts, Tzr);
 yeccpars2_98(_, _, _, _, T, _, _) ->
  yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_99/7}).
 -compile({nowarn_unused_function,  yeccpars2_99/7}).
-yeccpars2_99(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_,_,_|Nss] = Ss,
- NewStack = yeccpars2_99_(Stack),
- yeccgoto_comment_section(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+yeccpars2_99(S, 'string', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 100, Ss, Stack, T, Ts, Tzr);
+yeccpars2_99(_, _, _, _, T, _, _) ->
+ yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_100/7}).
 -compile({nowarn_unused_function,  yeccpars2_100/7}).
-yeccpars2_100(S, 'integer', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 101, Ss, Stack, T, Ts, Tzr);
 yeccpars2_100(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_|Nss] = Ss,
+ [_,_,_,_|Nss] = Ss,
  NewStack = yeccpars2_100_(Stack),
- yeccgoto_bit_timing_section(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ yeccgoto_comment_section(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_101/7}).
 -compile({nowarn_unused_function,  yeccpars2_101/7}).
-yeccpars2_101(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_|Nss] = Ss,
- NewStack = yeccpars2_101_(Stack),
- yeccgoto_bit_timing_section(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+yeccpars2_101(S, 'string', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 102, Ss, Stack, T, Ts, Tzr);
+yeccpars2_101(_, _, _, _, T, _, _) ->
+ yeccerror(T).
 
 -dialyzer({nowarn_function, yeccpars2_102/7}).
 -compile({nowarn_unused_function,  yeccpars2_102/7}).
-yeccpars2_102(S, 'bit_timing', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
-yeccpars2_102(S, 'comment', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
-yeccpars2_102(S, 'message', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
-yeccpars2_102(S, 'new_symbols', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
-yeccpars2_102(S, 'nodes', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
-yeccpars2_102(S, 'version', Ss, Stack, T, Ts, Tzr) ->
- yeccpars1(S, 14, Ss, Stack, T, Ts, Tzr);
 yeccpars2_102(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_|Nss] = Ss,
+ [_,_,_|Nss] = Ss,
  NewStack = yeccpars2_102_(Stack),
- yeccgoto_exprs(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+ yeccgoto_comment_section(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccpars2_103/7}).
 -compile({nowarn_unused_function,  yeccpars2_103/7}).
+yeccpars2_103(S, 'integer', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 104, Ss, Stack, T, Ts, Tzr);
 yeccpars2_103(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- [_,_|Nss] = Ss,
+ [_|Nss] = Ss,
  NewStack = yeccpars2_103_(Stack),
+ yeccgoto_bit_timing_section(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
+-dialyzer({nowarn_function, yeccpars2_104/7}).
+-compile({nowarn_unused_function,  yeccpars2_104/7}).
+yeccpars2_104(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_,_|Nss] = Ss,
+ NewStack = yeccpars2_104_(Stack),
+ yeccgoto_bit_timing_section(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
+-dialyzer({nowarn_function, yeccpars2_105/7}).
+-compile({nowarn_unused_function,  yeccpars2_105/7}).
+yeccpars2_105(S, 'bit_timing', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 9, Ss, Stack, T, Ts, Tzr);
+yeccpars2_105(S, 'comment', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 10, Ss, Stack, T, Ts, Tzr);
+yeccpars2_105(S, 'message', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 11, Ss, Stack, T, Ts, Tzr);
+yeccpars2_105(S, 'new_symbols', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 12, Ss, Stack, T, Ts, Tzr);
+yeccpars2_105(S, 'nodes', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 13, Ss, Stack, T, Ts, Tzr);
+yeccpars2_105(S, 'version', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 14, Ss, Stack, T, Ts, Tzr);
+yeccpars2_105(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_|Nss] = Ss,
+ NewStack = yeccpars2_105_(Stack),
+ yeccgoto_exprs(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
+-dialyzer({nowarn_function, yeccpars2_106/7}).
+-compile({nowarn_unused_function,  yeccpars2_106/7}).
+yeccpars2_106(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_,_|Nss] = Ss,
+ NewStack = yeccpars2_106_(Stack),
  yeccgoto_exprs(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_assignment/7}).
 -compile({nowarn_unused_function,  yeccgoto_assignment/7}).
 yeccgoto_assignment(9, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_100(100, Cat, Ss, Stack, T, Ts, Tzr);
+ yeccpars2_103(103, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_assignment(12, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_20(20, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_assignment(13, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -1178,20 +1207,20 @@ yeccgoto_assignment(13, Cat, Ss, Stack, T, Ts, Tzr) ->
 -compile({nowarn_unused_function,  yeccgoto_bit_timing_section/7}).
 yeccgoto_bit_timing_section(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_8(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_bit_timing_section(102=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_bit_timing_section(105=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_8(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_comment_section/7}).
 -compile({nowarn_unused_function,  yeccgoto_comment_section/7}).
 yeccgoto_comment_section(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_comment_section(102=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_comment_section(105=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_7(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_delimiters/7}).
 -compile({nowarn_unused_function,  yeccgoto_delimiters/7}).
 yeccgoto_delimiters(6, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_102(102, Cat, Ss, Stack, T, Ts, Tzr);
+ yeccpars2_105(105, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_delimiters(41, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_42(42, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_delimiters(43=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -1201,15 +1230,15 @@ yeccgoto_delimiters(43=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 -compile({nowarn_unused_function,  yeccgoto_expr/7}).
 yeccgoto_expr(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(6, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_expr(102, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_expr(105, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_6(6, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_exprs/7}).
 -compile({nowarn_unused_function,  yeccgoto_exprs/7}).
 yeccgoto_exprs(0, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_5(5, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_exprs(102=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_103(_S, Cat, Ss, Stack, T, Ts, Tzr).
+yeccgoto_exprs(105=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_106(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_ident_or_keyword/7}).
 -compile({nowarn_unused_function,  yeccgoto_ident_or_keyword/7}).
@@ -1245,7 +1274,7 @@ yeccgoto_kw_or_ident_list(35=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 -compile({nowarn_unused_function,  yeccgoto_message_section/7}).
 yeccgoto_message_section(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_message_section(102=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_message_section(105=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_4(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_multiplexer/7}).
@@ -1257,7 +1286,7 @@ yeccgoto_multiplexer(48, Cat, Ss, Stack, T, Ts, Tzr) ->
 -compile({nowarn_unused_function,  yeccgoto_nodes_section/7}).
 yeccgoto_nodes_section(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_nodes_section(102=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_nodes_section(105=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_3(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_number/7}).
@@ -1314,14 +1343,14 @@ yeccgoto_signal_list(46=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
 -compile({nowarn_unused_function,  yeccgoto_symbols_section/7}).
 yeccgoto_symbols_section(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_symbols_section(102=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_symbols_section(105=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_2(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_version_section/7}).
 -compile({nowarn_unused_function,  yeccgoto_version_section/7}).
 yeccgoto_version_section(0=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr);
-yeccgoto_version_section(102=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+yeccgoto_version_section(105=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_1(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -compile({inline,yeccpars2_1_/1}).
@@ -1617,7 +1646,7 @@ yeccpars2_44_(__Stack0) ->
 -compile({inline,yeccpars2_45_/1}).
 -dialyzer({nowarn_function, yeccpars2_45_/1}).
 -compile({nowarn_unused_function,  yeccpars2_45_/1}).
--file("src/dbc_parser.yrl", 84).
+-file("src/dbc_parser.yrl", 94).
 yeccpars2_45_(__Stack0) ->
  [___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -1634,7 +1663,7 @@ yeccpars2_45_(__Stack0) ->
 -compile({inline,yeccpars2_46_/1}).
 -dialyzer({nowarn_function, yeccpars2_46_/1}).
 -compile({nowarn_unused_function,  yeccpars2_46_/1}).
--file("src/dbc_parser.yrl", 93).
+-file("src/dbc_parser.yrl", 103).
 yeccpars2_46_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1644,7 +1673,7 @@ yeccpars2_46_(__Stack0) ->
 -compile({inline,yeccpars2_51_/1}).
 -dialyzer({nowarn_function, yeccpars2_51_/1}).
 -compile({nowarn_unused_function,  yeccpars2_51_/1}).
--file("src/dbc_parser.yrl", 133).
+-file("src/dbc_parser.yrl", 143).
 yeccpars2_51_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1654,7 +1683,7 @@ yeccpars2_51_(__Stack0) ->
 -compile({inline,yeccpars2_52_/1}).
 -dialyzer({nowarn_function, yeccpars2_52_/1}).
 -compile({nowarn_unused_function,  yeccpars2_52_/1}).
--file("src/dbc_parser.yrl", 134).
+-file("src/dbc_parser.yrl", 144).
 yeccpars2_52_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1664,7 +1693,7 @@ yeccpars2_52_(__Stack0) ->
 -compile({inline,yeccpars2_59_/1}).
 -dialyzer({nowarn_function, yeccpars2_59_/1}).
 -compile({nowarn_unused_function,  yeccpars2_59_/1}).
--file("src/dbc_parser.yrl", 142).
+-file("src/dbc_parser.yrl", 152).
 yeccpars2_59_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1674,7 +1703,7 @@ yeccpars2_59_(__Stack0) ->
 -compile({inline,yeccpars2_60_/1}).
 -dialyzer({nowarn_function, yeccpars2_60_/1}).
 -compile({nowarn_unused_function,  yeccpars2_60_/1}).
--file("src/dbc_parser.yrl", 141).
+-file("src/dbc_parser.yrl", 151).
 yeccpars2_60_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1684,7 +1713,7 @@ yeccpars2_60_(__Stack0) ->
 -compile({inline,yeccpars2_64_/1}).
 -dialyzer({nowarn_function, yeccpars2_64_/1}).
 -compile({nowarn_unused_function,  yeccpars2_64_/1}).
--file("src/dbc_parser.yrl", 144).
+-file("src/dbc_parser.yrl", 154).
 yeccpars2_64_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1694,7 +1723,7 @@ yeccpars2_64_(__Stack0) ->
 -compile({inline,yeccpars2_65_/1}).
 -dialyzer({nowarn_function, yeccpars2_65_/1}).
 -compile({nowarn_unused_function,  yeccpars2_65_/1}).
--file("src/dbc_parser.yrl", 145).
+-file("src/dbc_parser.yrl", 155).
 yeccpars2_65_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1704,7 +1733,7 @@ yeccpars2_65_(__Stack0) ->
 -compile({inline,yeccpars2_67_/1}).
 -dialyzer({nowarn_function, yeccpars2_67_/1}).
 -compile({nowarn_unused_function,  yeccpars2_67_/1}).
--file("src/dbc_parser.yrl", 136).
+-file("src/dbc_parser.yrl", 146).
 yeccpars2_67_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -1714,7 +1743,7 @@ yeccpars2_67_(__Stack0) ->
 -compile({inline,yeccpars2_73_/1}).
 -dialyzer({nowarn_function, yeccpars2_73_/1}).
 -compile({nowarn_unused_function,  yeccpars2_73_/1}).
--file("src/dbc_parser.yrl", 137).
+-file("src/dbc_parser.yrl", 147).
 yeccpars2_73_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -1724,7 +1753,7 @@ yeccpars2_73_(__Stack0) ->
 -compile({inline,yeccpars2_76_/1}).
 -dialyzer({nowarn_function, yeccpars2_76_/1}).
 -compile({nowarn_unused_function,  yeccpars2_76_/1}).
--file("src/dbc_parser.yrl", 119).
+-file("src/dbc_parser.yrl", 129).
 yeccpars2_76_(__Stack0) ->
  [___17,___16,___15,___14,___13,___12,___11,___10,___9,___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -1766,7 +1795,7 @@ yeccpars2_79_(__Stack0) ->
 -compile({inline,yeccpars2_94_/1}).
 -dialyzer({nowarn_function, yeccpars2_94_/1}).
 -compile({nowarn_unused_function,  yeccpars2_94_/1}).
--file("src/dbc_parser.yrl", 100).
+-file("src/dbc_parser.yrl", 110).
 yeccpars2_94_(__Stack0) ->
  [___18,___17,___16,___15,___14,___13,___12,___11,___10,___9,___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -1788,18 +1817,18 @@ yeccpars2_94_(__Stack0) ->
 -compile({inline,yeccpars2_95_/1}).
 -dialyzer({nowarn_function, yeccpars2_95_/1}).
 -compile({nowarn_unused_function,  yeccpars2_95_/1}).
--file("src/dbc_parser.yrl", 94).
+-file("src/dbc_parser.yrl", 104).
 yeccpars2_95_(__Stack0) ->
  [___2,___1 | __Stack] = __Stack0,
  [begin
                                                [___1|___2]
   end | __Stack].
 
--compile({inline,yeccpars2_99_/1}).
--dialyzer({nowarn_function, yeccpars2_99_/1}).
--compile({nowarn_unused_function,  yeccpars2_99_/1}).
--file("src/dbc_parser.yrl", 77).
-yeccpars2_99_(__Stack0) ->
+-compile({inline,yeccpars2_100_/1}).
+-dialyzer({nowarn_function, yeccpars2_100_/1}).
+-compile({nowarn_unused_function,  yeccpars2_100_/1}).
+-file("src/dbc_parser.yrl", 85).
+yeccpars2_100_(__Stack0) ->
  [___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
                                                              
@@ -1810,45 +1839,60 @@ yeccpars2_99_(__Stack0) ->
   }}
   end | __Stack].
 
--compile({inline,yeccpars2_100_/1}).
--dialyzer({nowarn_function, yeccpars2_100_/1}).
--compile({nowarn_unused_function,  yeccpars2_100_/1}).
--file("src/dbc_parser.yrl", 72).
-yeccpars2_100_(__Stack0) ->
- [___2,___1 | __Stack] = __Stack0,
- [begin
-                                              {bit_timing, nil}
-  end | __Stack].
-
--compile({inline,yeccpars2_101_/1}).
--dialyzer({nowarn_function, yeccpars2_101_/1}).
--compile({nowarn_unused_function,  yeccpars2_101_/1}).
--file("src/dbc_parser.yrl", 71).
-yeccpars2_101_(__Stack0) ->
- [___3,___2,___1 | __Stack] = __Stack0,
- [begin
-                                                      {bit_timing, ___2}
-  end | __Stack].
-
 -compile({inline,yeccpars2_102_/1}).
 -dialyzer({nowarn_function, yeccpars2_102_/1}).
 -compile({nowarn_unused_function,  yeccpars2_102_/1}).
--file("src/dbc_parser.yrl", 38).
+-file("src/dbc_parser.yrl", 78).
 yeccpars2_102_(__Stack0) ->
- [___2,___1 | __Stack] = __Stack0,
+ [___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
-                          [___1]
+                                                   
+  {comment, #{
+    id => strip_meta(___3),
+    identifier => nil,
+    value => strip_meta(___4)
+  }}
   end | __Stack].
 
 -compile({inline,yeccpars2_103_/1}).
 -dialyzer({nowarn_function, yeccpars2_103_/1}).
 -compile({nowarn_unused_function,  yeccpars2_103_/1}).
--file("src/dbc_parser.yrl", 39).
+-file("src/dbc_parser.yrl", 72).
 yeccpars2_103_(__Stack0) ->
+ [___2,___1 | __Stack] = __Stack0,
+ [begin
+                                              {bit_timing, nil}
+  end | __Stack].
+
+-compile({inline,yeccpars2_104_/1}).
+-dialyzer({nowarn_function, yeccpars2_104_/1}).
+-compile({nowarn_unused_function,  yeccpars2_104_/1}).
+-file("src/dbc_parser.yrl", 71).
+yeccpars2_104_(__Stack0) ->
+ [___3,___2,___1 | __Stack] = __Stack0,
+ [begin
+                                                      {bit_timing, ___2}
+  end | __Stack].
+
+-compile({inline,yeccpars2_105_/1}).
+-dialyzer({nowarn_function, yeccpars2_105_/1}).
+-compile({nowarn_unused_function,  yeccpars2_105_/1}).
+-file("src/dbc_parser.yrl", 38).
+yeccpars2_105_(__Stack0) ->
+ [___2,___1 | __Stack] = __Stack0,
+ [begin
+                          [___1]
+  end | __Stack].
+
+-compile({inline,yeccpars2_106_/1}).
+-dialyzer({nowarn_function, yeccpars2_106_/1}).
+-compile({nowarn_unused_function,  yeccpars2_106_/1}).
+-file("src/dbc_parser.yrl", 39).
+yeccpars2_106_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
                                  [___1 | ___3]
   end | __Stack].
 
 
--file("src/dbc_parser.yrl", 169).
+-file("src/dbc_parser.yrl", 179).
