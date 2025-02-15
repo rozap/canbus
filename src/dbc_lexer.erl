@@ -1042,7 +1042,7 @@ yyaction_12(TokenLine) ->
 -compile({inline,yyaction_13/2}).
 -file("src/dbc_lexer.xrl", 37).
 yyaction_13(TokenChars, TokenLine) ->
-     { token, { identifier, TokenLine, TokenChars } } .
+     { token, { identifier, TokenLine, list_to_binary (TokenChars) } } .
 
 -compile({inline,yyaction_14/2}).
 -file("src/dbc_lexer.xrl", 38).
@@ -1057,7 +1057,7 @@ yyaction_15(TokenChars, TokenLine) ->
 -compile({inline,yyaction_16/2}).
 -file("src/dbc_lexer.xrl", 40).
 yyaction_16(TokenChars, TokenLine) ->
-     { token, { string, TokenLine, strip_quotes (TokenChars) } } .
+     { token, { string, TokenLine, list_to_binary (strip_quotes (TokenChars)) } } .
 
 -compile({inline,yyaction_17/1}).
 -file("src/dbc_lexer.xrl", 41).

@@ -36,10 +36,10 @@ VAL_       : {token, {value_definition, TokenLine}}.
 {WHITESPACE}+ : skip_token.
 {NEWLINE}     : {token, {delimiter, TokenLine}}.
 {SEMICOLON}   : {token, {delimiter, TokenLine}}.
-{IDENTIFIER}  : {token, {identifier, TokenLine, TokenChars}}.
+{IDENTIFIER}  : {token, {identifier, TokenLine, list_to_binary(TokenChars)}}.
 {INTEGER}     : {token, {integer, TokenLine, list_to_integer(TokenChars)}}.
 {FLOAT}       : {token, {float, TokenLine, list_to_float(TokenChars)}}.
-{STRING}      : {token, {string, TokenLine, strip_quotes(TokenChars)}}.
+{STRING}      : {token, {string, TokenLine, list_to_binary(strip_quotes(TokenChars))}}.
 {COLON}       : {token, {colon, TokenLine}}.
 {PIPE}        : {token, {pipe, TokenLine}}.
 {AT}          : {token, {at, TokenLine}}.

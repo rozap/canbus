@@ -3,50 +3,59 @@ defmodule DbcTest do
   import TestHelpers
   alias Canbus.Dbc, as: D
 
-  # test "can lex" do
-  #   assert {:ok, _} = dbc("fome") |> D.lex() |> IO.inspect
-  # end
+  test "can lex" do
+    assert {:ok, _} = dbc("fome") |> D.lex()
+  end
 
-  # test "can parse" do
-  #   {:ok, tokens} = dbc("fome") |> D.parse() |> IO.inspect()
-  # end
+  test "can parse a simple thing" do
+    {:ok, p} =
+      D.parse("""
+      VERSION "x"
 
-  test "parse version" do
+      NS_ :
+        NS_DESC_
+        CM_
+        BA_DEF_
+        BA_
 
-    D.parse("""
-    VERSION "x"
+      BS_:
 
-    NS_ :
-      NS_DESC_
-      CM_
-      BA_DEF_
-      BA_
-      VAL_
-      CAT_DEF_
-      CAT_
-      FILTER
-      BA_DEF_DEF_
-      EV_DATA_
-      ENVVAR_DATA_
-      SGTYPE_
-      SGTYPE_VAL_
-      BA_DEF_SGTYPE_
-      BA_SGTYPE_
-      SIG_TYPE_REF_
-      VAL_TABLE_
-      SIG_GROUP_
-      SIG_VALTYPE_
-      SIGTYPE_VALTYPE_
-      BO_TX_BU_
-      BA_DEF_REL_
-      BA_REL_
-      BA_DEF_DEF_REL_
-      BU_SG_REL_
-      BU_EV_REL_
-      BU_BO_REL_
-      SG_MUL_VAL_
+      BU_:
 
+      BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+        SG_ AFR : 7|16@0+ (0.001,9) [0|0] "AFR" Vector__XXX
 
-    """) |> IO.inspect()
+      BO_ 512 BASE0: 8 Vector__XXX
+        SG_ WarningCounter : 0|16@1+ (1,0) [0|0] "" Vector__XXX
+        SG_ LastError : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+
+      CM_ SG_ 3221225472 AFR "Current AFR Reading
+      ";
+      CM_ SG_ 3221225472 VVTPos "Current VVT Position Reading";
+      CM_ SG_ 512 WarningCounter "Total warnings since ECU start time";
+      CM_ SG_ 512 LastError "Last error code";
+      """)
+
+    signals =
+      p
+      |> Map.get(:message)
+      |> Enum.flat_map(fn m -> m.signals end)
+      |> Enum.map(fn s -> s.name end)
+      |> Enum.sort()
+
+    assert signals == ["AFR", "LastError", "WarningCounter"]
+
+    comments =
+      p
+      |> Map.get(:comment)
+      |> Enum.map(fn c -> {c.identifier, c.value} end)
+      |> Enum.sort_by(fn {k, _} -> k end)
+
+    assert comments == [
+             {"AFR", "Current AFR Reading\n"},
+             {"LastError", "Last error code"},
+             {"VVTPos", "Current VVT Position Reading"},
+             {"WarningCounter", "Total warnings since ECU start time"}
+           ]
   end
 end
