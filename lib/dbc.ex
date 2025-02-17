@@ -1,6 +1,8 @@
 defmodule Canbus.Dbc do
+  defstruct [:message, :version, :nodes, :comment, :bit_timing]
+
   defmodule SyntaxError do
-    defstruct [:token, :line, before: nil]
+    defstruct [:token, :line, before: nil, tokens: []]
   end
 
   defmodule UnexpectedValueError do
@@ -32,16 +34,43 @@ defmodule Canbus.Dbc do
             nodes
             |> Enum.group_by(fn {key, _} -> key end)
             |> Enum.map(fn {key, values} -> {key, Enum.map(values, fn {_key, v} -> v end)} end)
+            |> Enum.map(fn
+              {:message, messages} ->
+                {:message, Enum.map(messages, fn m -> {m.id, m} end) |> Enum.into(%{})}
+
+              {key, value} ->
+                {key, value}
+            end)
             |> Enum.into(%{})
             # TODO: half baked implementation - distinguishing between identifiers and keywords
             # in the lexer cascaded to weirdness here
             |> Map.delete(:symbols)
 
-          {:ok, m}
+          {:ok, struct(__MODULE__, m)}
 
         {:error, {line, :dbc_parser, [~c"syntax error before: ", before]}} ->
-          {:error, %SyntaxError{line: line, before: :erlang.list_to_binary(before)}}
+          l_start = line - 1
+          l_end = line + 1
+
+          window =
+            Enum.filter(tokens, fn
+              t ->
+                line =
+                  case t do
+                    {_, line} -> line
+                    {_, line, _} -> line
+                  end
+
+                line >= l_start and line <= l_end
+            end)
+
+          {:error,
+           %SyntaxError{line: line, before: :erlang.list_to_binary(before), tokens: window}}
       end
     end
+  end
+
+  def get_signal(%__MODULE__{message: m}, id) do
+    Map.get(m, id)
   end
 end

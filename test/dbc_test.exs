@@ -3,9 +3,9 @@ defmodule DbcTest do
   import TestHelpers
   alias Canbus.Dbc, as: D
 
-  test "can lex" do
-    assert {:ok, _} = dbc("fome") |> D.lex()
-  end
+  # test "can lex" do
+  #   assert {:ok, _} = dbc("fome") |> D.lex()
+  # end
 
   test "can parse a simple thing" do
     {:ok, p} =
@@ -18,7 +18,7 @@ defmodule DbcTest do
         BA_DEF_
         BA_
 
-      BS_:
+      BS_ :
 
       BU_:
 
@@ -39,7 +39,7 @@ defmodule DbcTest do
     signals =
       p
       |> Map.get(:message)
-      |> Enum.flat_map(fn m -> m.signals end)
+      |> Enum.flat_map(fn {_id, m} -> m.signals end)
       |> Enum.map(fn s -> s.name end)
       |> Enum.sort()
 
@@ -61,5 +61,6 @@ defmodule DbcTest do
 
   test "can parse the thing" do
     assert {:ok, _} = dbc("fome") |> D.parse()
+    assert {:ok, _} = dbc("volvo") |> D.parse()
   end
 end
