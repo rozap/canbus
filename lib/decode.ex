@@ -12,7 +12,7 @@ defmodule Canbus.Decode do
   end
 
   # TODO: i don't think big endian decoders work...
-  # there is some cursed byte fiddling
+  # there is some cursed byte fiddling involved
   defp decode_bytes(b, size, :unsigned, :big) do
     <<p::big-unsigned-integer-size(^size), _rest::bits>> = b
     p

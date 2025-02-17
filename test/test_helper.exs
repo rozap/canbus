@@ -6,7 +6,7 @@ defmodule TestHelpers do
 
   # defp message([]), do: nil
   defp message(["message:" | t]), do: t
-  defp message([h | t]), do: message(t)
+  defp message([_h | t]), do: message(t)
 
   defp value(kv) do
     String.split(kv, "=") |> List.last()

@@ -1,21 +1,55 @@
 # Canbus
+parse dbc files and use them to interpret can frames
 
-**TODO: Add description**
+# Status
+probably doesn't work for you. it only works enough for me.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `canbus` to your list of dependencies in `mix.exs`:
-
+# Usage
 ```elixir
-def deps do
-  [
-    {:canbus, "~> 0.1.0"}
-  ]
-end
+{:ok, dbc} = Canbus.Dbc.parse("something.dbc")
+# Might be something like
+#%Canbus.Dbc{
+#  message: %{
+#    512 => %{
+#      id: 512,
+#      name: "BASE0",
+#      size: 8,
+#      sender: "Vector__XXX",
+#      signals: [
+#        %{
+#          name: "WarningCounter",
+#          size: 16,
+#          unit: "",
+#          range: {0, 0},
+#          endianness: :little,
+#          sign: :unsigned, 
+#          multiplexer: nil,
+#          start_bit: 0,
+#          scale: {1, 0},
+#          receivers: ["Vector__XXX"]
+#        }
+#        ...etc
+#
+
+
+# decode a stream of frames given the dbc 
+Enum.map(some_frames(), fn {_can_id, _dlc, _bytes} = frame -> 
+  Canbus.Decode.decode(dbc, frame)
+end)
+# might be something like
+#  %{
+#    "AUX1Temp" => 0,
+#    "AUX2Temp" => 0,
+#    "CoolantTemp" => 29,
+#    "FuelLevel" => 0.0,
+#    "IntakeTemp" => 25,
+#    "MAP" => 94.49999055,
+#    "MCUTemp" => 23
+#  }
+#  %{
+#    "BattVolt" => 0.007,
+#    "FuelTemperature" => 0,
+#    "OilPress" => 0.0,
+#    "OilTemperature" => 0
+#  }
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/canbus>.
-

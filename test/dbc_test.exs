@@ -57,6 +57,8 @@ defmodule DbcTest do
              {"VVTPos", "Current VVT Position Reading"},
              {"WarningCounter", "Total warnings since ECU start time"}
            ]
+
+          IO.inspect p
   end
 
   test "can parse the thing" do

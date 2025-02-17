@@ -27,7 +27,5 @@ defmodule DecodeTest do
 
     assert length(oils) == 5
     assert length(volts) == 10
-
-
   end
 end
