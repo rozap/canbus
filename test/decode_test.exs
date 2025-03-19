@@ -13,7 +13,7 @@ defmodule DecodeTest do
     frames =
       txt_frames("can-log")
       |> Stream.map(fn frame ->
-        Decode.decode(dbc, frame)
+        Decode.decode!(dbc, frame)
       end)
       |> Enum.into([])
 

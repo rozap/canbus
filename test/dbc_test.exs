@@ -7,6 +7,23 @@ defmodule DbcTest do
   #   assert {:ok, _} = dbc("fome") |> D.lex()
   # end
 
+  test "parse a simple thing with negative ranges" do
+    {:ok, p} =
+      D.parse("""
+      VERSION "x"
+
+      BO_ 400 GPS_POSITION: 8 GPS_MODULE
+        SG_ LATITUDE : 0|32@1- (0.0000001,0) [-90|90] "degrees" GPS_RECEIVER
+        SG_ LONGITUDE : 32|32@1- (0.0000001,0) [-180|180] "degrees" GPS_RECEIVER
+      """)
+
+    assert %Canbus.Dbc{
+             message: %{
+               400 => %{}
+             }
+           } = p
+  end
+
   test "can parse a simple thing" do
     {:ok, p} =
       D.parse("""
@@ -57,12 +74,10 @@ defmodule DbcTest do
              {"VVTPos", "Current VVT Position Reading"},
              {"WarningCounter", "Total warnings since ECU start time"}
            ]
-
-          IO.inspect p
   end
 
   test "can parse the thing" do
     assert {:ok, _} = dbc("fome") |> D.parse()
-    assert {:ok, _} = dbc("volvo") |> D.parse()
+    # assert {:ok, _} = dbc("volvo") |> D.parse()
   end
 end

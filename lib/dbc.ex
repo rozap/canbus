@@ -1,5 +1,5 @@
 defmodule Canbus.Dbc do
-  defstruct [:message, :version, :nodes, :comment, :bit_timing]
+  defstruct [:message, :version, :nodes, :comment, :bit_timing, signal_to_message: %{}]
 
   defmodule SyntaxError do
     defstruct [:token, :line, before: nil, tokens: []]
@@ -26,6 +26,10 @@ defmodule Canbus.Dbc do
     end
   end
 
+  defp sort_message(m) do
+    %{m | signals: Enum.sort_by(m.signals, fn s -> s.start_bit end)}
+  end
+
   def parse(content) do
     with {:ok, tokens} <- lex(content) do
       case :dbc_parser.parse(tokens) do
@@ -36,7 +40,7 @@ defmodule Canbus.Dbc do
             |> Enum.map(fn {key, values} -> {key, Enum.map(values, fn {_key, v} -> v end)} end)
             |> Enum.map(fn
               {:message, messages} ->
-                {:message, Enum.map(messages, fn m -> {m.id, m} end) |> Enum.into(%{})}
+                {:message, Enum.map(messages, fn m -> {m.id, sort_message(m)} end) |> Enum.into(%{})}
 
               {key, value} ->
                 {key, value}
@@ -45,6 +49,16 @@ defmodule Canbus.Dbc do
             # TODO: half baked implementation - distinguishing between identifiers and keywords
             # in the lexer cascaded to weirdness here
             |> Map.delete(:symbols)
+
+          signal_to_message =
+            Enum.flat_map(m.message, fn {_can_id, m} ->
+              Enum.map(m.signals, fn s ->
+                {s.name, m.id}
+              end)
+            end)
+            |> Enum.into(%{})
+
+          m = Map.put(m, :signal_to_message, signal_to_message)
 
           {:ok, struct(__MODULE__, m)}
 
@@ -72,5 +86,10 @@ defmodule Canbus.Dbc do
 
   def get_signal(%__MODULE__{message: m}, id) do
     Map.get(m, id)
+  end
+
+  def get_message_for_signal(%__MODULE__{signal_to_message: lookup} = dbc, signal_name) do
+    message_id = Map.get(lookup, signal_name)
+    Map.get(dbc.message, message_id)
   end
 end

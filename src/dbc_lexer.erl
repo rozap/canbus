@@ -1,4 +1,4 @@
--file("/home/chris/.asdf/installs/erlang/27.0/lib/parsetools-2.6/include/leexinc.hrl", 0).
+-file("/home/chris/.asdf/installs/erlang/27.1.2/lib/parsetools-2.6/include/leexinc.hrl", 0).
 %% The source of this file is part of leex distribution, as such it
 %% has the same Copyright as the other files in the leex
 %% distribution. The Copyright is defined in the accompanying file
@@ -17,7 +17,7 @@
 strip_quotes(Chars) ->
     lists:sublist(Chars, 2, length(Chars) - 2).
 
--file("/home/chris/.asdf/installs/erlang/27.0/lib/parsetools-2.6/include/leexinc.hrl", 14).
+-file("/home/chris/.asdf/installs/erlang/27.1.2/lib/parsetools-2.6/include/leexinc.hrl", 14).
 
 format_error({illegal,S}) -> ["illegal characters ",io_lib:write_string(S)];
 format_error({user,S}) -> S.
@@ -1120,4 +1120,4 @@ yyaction_27(TokenLine) ->
 -file("src/dbc_lexer.xrl", 52).
 yyaction_28(TokenLine) ->
      { token, { minus, TokenLine } } .
--file("/home/chris/.asdf/installs/erlang/27.0/lib/parsetools-2.6/include/leexinc.hrl", 344).
+-file("/home/chris/.asdf/installs/erlang/27.1.2/lib/parsetools-2.6/include/leexinc.hrl", 344).

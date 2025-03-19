@@ -60,6 +60,13 @@ defmodule Canbus.Decode do
 
   def decode(dbc, {id, _dlc, bytes} = _frame) do
     %{signals: signals} = Dbc.get_signal(dbc, id)
-    pop(signals, bytes) |> Enum.map(&to_physical/1) |> Enum.into(%{})
+    # TODO: better error handling
+    res = pop(signals, bytes) |> Enum.map(&to_physical/1) |> Enum.into(%{})
+    {:ok, res}
+  end
+
+  def decode!(dbc, f) do
+    {:ok, res} = decode(dbc, f)
+    res
   end
 end

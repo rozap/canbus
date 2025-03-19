@@ -21,7 +21,7 @@ to_endian(0) -> big.
 to_sign({plus, _}) -> unsigned;
 to_sign({minus, _}) -> signed.
 
--file("/home/chris/.asdf/installs/erlang/27.0/lib/parsetools-2.6/include/yeccpre.hrl", 0).
+-file("/home/chris/.asdf/installs/erlang/27.1.2/lib/parsetools-2.6/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
